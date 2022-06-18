@@ -1,0 +1,59 @@
+# https://docs.getdbt.com/reference/dbt_project.yml
+
+name: 'dbt_ga4'
+
+config-version: 2
+version: 0.0.1
+
+profile: 'dev'
+
+model-paths: ["models"]
+#seed-paths: [directorypath]
+test-paths: ["tests"]
+#analysis-paths: [directorypath]
+macro-paths: ["macros"]
+snapshot-paths: ["snapshots"]
+#docs-paths: [directorypath]
+asset-paths: ["assets"]
+
+target-path: "targets"
+log-path: "logs"
+packages-install-path: packages
+
+#clean-targets: [directorypath]
+
+#query-comment: string
+
+require-dbt-version: '>=1.0.0'
+
+quoting:
+  database: true
+  schema: true
+  identifier: true
+
+models:
+  dbt_ga4:
+    staging:
+      +schema: stg_ga4
+
+#seeds:
+#  <seed-configs>
+#
+#snapshots:
+#  <snapshot-configs>
+#
+#sources:
+#  <source-configs>
+#
+#tests:
+#  <test-configs>
+#
+#vars:
+#  <variables>
+
+#on-run-start: sql-statement | [sql-statement]
+#on-run-end: sql-statement | [sql-statement]
+
+#dispatch:
+#  - macro_namespace: packagename
+#    search_order: [packagename]

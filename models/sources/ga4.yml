@@ -1,0 +1,9 @@
+version: 2
+
+sources:
+  - name: ga4
+    schema: ga4_obfuscated_sample_ecommerce
+    tables:
+      - name: events_20201101
+
+

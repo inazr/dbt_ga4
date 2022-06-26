@@ -11,10 +11,14 @@ WITH event_params_cte AS (
             event_params.value.float_value,
             event_params.value.double_value,
     FROM
-            {{ source('ga4', 'events_20201101') }}
+            {{ source('ga4', 'events') }}
+
     CROSS JOIN
             unnest(event_params)
             AS event_params
+
+    WHERE   1=1
+      AND   _table_suffix > '20201101'
 
 )
 

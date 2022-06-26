@@ -30,7 +30,11 @@ SELECT
         items.creative_slot,
         TO_HEX(SHA256(CONCAT(user_pseudo_id, event_timestamp, event_name, row_number() OVER (PARTITION BY user_pseudo_id, event_timestamp, event_name)))) AS join_key,
 FROM
-        {{ source('ga4', 'events_20201101') }}
+        {{ source('ga4', 'events') }}
+
 CROSS JOIN
         unnest(items)
         AS items
+
+WHERE   1=1
+  AND   _table_suffix > '20201101'

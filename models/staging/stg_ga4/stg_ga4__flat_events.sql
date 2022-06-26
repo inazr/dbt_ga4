@@ -5,7 +5,6 @@ SELECT
         TIMESTAMP_MICROS(event_timestamp) AS event_timestamp,
         (select value.int_value from unnest(event_params) where key = 'ga_session_id') as ga_session_id,
         event_name,
-        --event_params, -- array
         event_previous_timestamp,
         event_value_in_usd,
         event_bundle_sequence_id,
@@ -15,7 +14,6 @@ SELECT
         privacy_info.analytics_storage,
         privacy_info.ads_storage,
         privacy_info.uses_transient_token,
-        --user_properties, -- array
         TIMESTAMP_MICROS(user_first_touch_timestamp) AS user_first_touch_timestamp,
         user_ltv.revenue AS user_ltv_revenue,
         user_ltv.currency AS user_ltv_currency,
@@ -57,8 +55,9 @@ SELECT
         ecommerce.tax_value,
         ecommerce.unique_items,
         ecommerce.transaction_id,
-
-        --items,  -- array
         TO_HEX(SHA256(concat(user_pseudo_id,event_timestamp,event_name,row_number() over(partition by user_pseudo_id, event_timestamp, event_name)))) as join_key
 FROM
-    {{ source('ga4', 'events_20201101') }}
+        {{ source('ga4', 'events') }}
+
+WHERE   1=1
+  AND   _table_suffix > '20201101'

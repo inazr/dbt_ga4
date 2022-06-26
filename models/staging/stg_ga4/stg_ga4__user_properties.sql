@@ -9,7 +9,11 @@ SELECT
         user_properties.value.double_value,
         TO_HEX(SHA256(CONCAT(user_pseudo_id, event_timestamp, event_name, row_number() OVER (PARTITION BY user_pseudo_id, event_timestamp, event_name)))) AS join_key,
 FROM
-        ga4_obfuscated_sample_ecommerce.events_20201101
+        {{ source('ga4', 'events') }}
+
 CROSS JOIN
         unnest(user_properties)
         AS user_properties
+
+WHERE   1=1
+  AND   _table_suffix > '20201101'

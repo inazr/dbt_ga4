@@ -1,4 +1,5 @@
 # https://docs.getdbt.com/reference/dbt_project.yml
+# loosely based on: https://www.ga4bigquery.com/tutorial-how-to-flatten-the-ga4-bigquery-export-schema-for-relational-databases-using-unnest/
 
 name: 'dbt_ga4'
 

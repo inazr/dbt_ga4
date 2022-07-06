@@ -1,3 +1,6 @@
+
+
+
 SELECT
         DATE_TRUNC( stg_ga4__flat_events.event_date, MONTH ) AS event_month,
         stg_ga4__flat_events.category,

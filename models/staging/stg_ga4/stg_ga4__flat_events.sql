@@ -60,4 +60,4 @@ FROM
         {{ source('ga4', 'events') }}
 
 WHERE   1=1
-  AND   _table_suffix > '20201101'
+  AND   _table_suffix >=  '20201101'

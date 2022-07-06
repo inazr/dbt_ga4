@@ -1,10 +1,10 @@
-# https://docs.getdbt.com/reference/dbt_project.yml
+  # https://docs.getdbt.com/reference/dbt_project.yml
 # loosely based on: https://www.ga4bigquery.com/tutorial-how-to-flatten-the-ga4-bigquery-export-schema-for-relational-databases-using-unnest/
 
 name: 'dbt_ga4'
 
 config-version: 2
-version: 0.0.1
+version: 0.0.2
 
 profile: 'dev'
 
@@ -25,3 +25,6 @@ models:
   dbt_ga4:
     staging:
       +schema: stg_ga4
+
+    dwh:
+      +schema: fct_ga4

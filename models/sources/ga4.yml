@@ -2,7 +2,7 @@ version: 2
 
 sources:
   - name: ga4
-    schema: ga4_obfuscated_sample_ecommerce
+    schema: ga4_obfuscated_sample_ecommerce # ENTER YOUR SOURCE SCHEMA HERE
     tables:
       - name: events
         identifier: "events_*"

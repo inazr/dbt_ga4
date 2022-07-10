@@ -20,11 +20,8 @@ WITH event_params_cte AS (
     WHERE   1=1
       AND   _table_suffix >= CAST(TIMESTAMP '{{ var('stg_current_date') }}' - INTERVAL {{ var('stg_look_back_window_days') }} DAY AS STRING FORMAT 'YYYYMMDD')
 
-
-
-
-
 )
+
 
 SELECT
         MAX(ga_session_id) OVER (PARTITION BY event_timestamp, event_name) AS ga_session_id,

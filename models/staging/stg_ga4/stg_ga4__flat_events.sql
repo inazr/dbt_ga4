@@ -1,5 +1,3 @@
--- noinspection SqlNoDataSourceInspection
-
 SELECT
         PARSE_DATE('%Y%m%d', event_date) AS event_date,
         TIMESTAMP_MICROS(event_timestamp) AS event_timestamp,

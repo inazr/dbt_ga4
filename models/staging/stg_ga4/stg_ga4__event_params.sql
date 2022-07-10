@@ -18,7 +18,11 @@ WITH event_params_cte AS (
             AS event_params
 
     WHERE   1=1
-      AND   _table_suffix > '20201101'
+      AND   _table_suffix >= CAST(TIMESTAMP '{{ var('stg_current_date') }}' - INTERVAL {{ var('stg_look_back_window_days') }} DAY AS STRING FORMAT 'YYYYMMDD')
+
+
+
+
 
 )
 

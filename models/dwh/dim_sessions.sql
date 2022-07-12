@@ -1,8 +1,21 @@
 --https://support.google.com/analytics/answer/9756891?hl=en
 
+{{ config(
+
+        materialized = 'incremental',
+        partition_by = {
+              "field": "DATE(session_begin_at)",
+              "data_type": "date",
+              "granularity": "day"
+        },
+        cluster_by = "session_begin_at",
+)}}
+
+
 SELECT
         stg_ga4__flat_events.user_pseudo_id,
         stg_ga4__flat_events.ga_session_id,
+        MIN(stg_ga4__flat_events.event_timestamp) AS session_begin_at,
         stg_ga4__flat_events.source,
         stg_ga4__flat_events.medium,
         stg_ga4__event_params.string_value AS campaign,
@@ -72,11 +85,19 @@ SELECT
 
         END AS default_channel_grouping
 FROM
-        stg_ga4.stg_ga4__flat_events
-
+--         stg_ga4.stg_ga4__flat_events
+        {{ref('stg_ga4__flat_events')}}
 LEFT JOIN
-        stg_ga4.stg_ga4__event_params
+--         stg_ga4.stg_ga4__event_params
+        {{ref('stg_ga4__event_params')}}
         ON stg_ga4__flat_events.join_key = stg_ga4__event_params.join_key
         AND stg_ga4__event_params.key = 'campaign'
+
+        {% if is_incremental() %}
+WHERE
+        stg_ga4__flat_events.event_date >= ( SELECT MAX( DATE( session_begin_at ) ) FROM {{ this }} )
+
+        {% endif %}
+
 GROUP BY
-        1,2,3,4,5,6
+        1,2,4,5,6,7

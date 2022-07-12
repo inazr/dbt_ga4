@@ -8,7 +8,7 @@
 
     {%- elif default_schema == "dbt_models" -%}
 
-        {{ custom_schema_name | trim }}
+        {{ custom_schema_name }}
 
     {%- else -%}
 

@@ -4,18 +4,19 @@
 
         materialized = 'incremental',
         partition_by = {
-              "field": "DATE(session_begin_at)",
+              "field": "DATE(session_first_event)",
               "data_type": "date",
               "granularity": "day"
         },
-        cluster_by = "session_begin_at",
+        cluster_by = "session_first_event",
 )}}
 
 
 SELECT
         stg_ga4__flat_events.user_pseudo_id,
         stg_ga4__flat_events.ga_session_id,
-        MIN(stg_ga4__flat_events.event_timestamp) AS session_begin_at,
+        MIN(stg_ga4__flat_events.event_timestamp) AS session_first_event,
+        MAX(stg_ga4__flat_events.event_timestamp) AS session_last_event,
         stg_ga4__flat_events.source,
         stg_ga4__flat_events.medium,
         stg_ga4__event_params.string_value AS campaign,
@@ -95,9 +96,9 @@ LEFT JOIN
 
         {% if is_incremental() %}
 WHERE
-        stg_ga4__flat_events.event_date >= ( SELECT MAX( DATE( session_begin_at ) ) FROM {{ this }} )
+        stg_ga4__flat_events.event_date >= ( SELECT MAX( DATE( session_first_event ) ) FROM {{ this }} )
 
         {% endif %}
 
 GROUP BY
-        1,2,4,5,6,7
+        1,2,5,6,7,8

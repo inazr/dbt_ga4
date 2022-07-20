@@ -1,5 +1,12 @@
 # dbt_ga4
 
+## info
+
+author: me
+license: MIT
+
+## database
+
 This dbt model for ga4 is currently designed to work with bigquery. I do not know if other db are fully functional as well. 
 
 ## concept

@@ -9,7 +9,7 @@ version: 0.0.2
 profile: 'dev'
 
 vars:
-  stg_ga4__look_back_window_days: 5 #Needs to be modified if the model has not run for more than this number of days
+  stg_ga4__look_back_window_days: 125 #Needs to be modified if the model has not run for more than this number of days
   stg_ga4__current_date: '2021-01-31 00:00:00+00:00' # Replace with CURRENT_DATE
 
 model-paths: ["models"]
@@ -32,3 +32,5 @@ models:
 
     dwh:
       +schema: fct_ga4
+
+

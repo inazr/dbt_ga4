@@ -9,8 +9,9 @@ version: 0.0.2
 profile: 'dev'
 
 vars:
-  stg_ga4__look_back_window_days: 125 #Needs to be modified if the model has not run for more than this number of days
+  stg_ga4__look_back_window_days: 125 # Needs to be modified if the model has not run for more than this number of days
   stg_ga4__current_date: '2021-01-31 00:00:00+00:00' # Replace with CURRENT_DATE
+  ga4__funnel_steps: ['view_search_result', 'select_item', 'add_to_cart', 'add_payment_info', 'purchase'] # Insert all your funnel step events in here
 
 model-paths: ["models"]
 target-path: "targets"

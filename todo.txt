@@ -1,9 +1,6 @@
 # TODO - no special order
-# 1. Switch default channel grouping to be a macro
-# 2. Switch default channel grouping to use seeds
 # 3. dim_ga4__users
 # 4. Channel attribution
 #   a) "Last Click Non Direct"
 #   b) Google game theory one where I forgot the name
-# 5. Rename the folder / schema structure
 # 6. Create dbt metrics

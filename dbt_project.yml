@@ -5,14 +5,15 @@
 name: 'dbt_ga4'
 
 config-version: 2
-version: 0.0.2
+version: 0.0.3
 
 profile: 'dev'
 
 vars:
-  stg_ga4__look_back_window_days: 125 # Needs to be modified if the model has not run for more than this number of days
-  stg_ga4__current_date: '2021-01-31 00:00:00+00:00' # Replace with CURRENT_DATE
-  ga4__funnel_steps: ['view_search_result', 'select_item', 'add_to_cart', 'add_payment_info', 'purchase'] # Insert all your funnel step events in here
+  ga4__look_back_window_days: 5 # Needs to be modified if the model has not run for more than this number of days
+  ga4__start_date: '2020-11-01 00:00:00+00:00' # May be used in the future
+  ga4__current_date: '2021-01-31 00:00:00+00:00' # Replace with CURRENT_DATE
+  ga4__funnel_steps: ['view_search_result', 'select_item', 'add_to_cart', 'add_payment_info', 'purchase'] # Insert all your funnel step events in their respective order here
 
 model-paths: ["models"]
 target-path: "targets"
@@ -30,9 +31,12 @@ quoting:
 models:
   dbt_ga4:
     staging:
-      +schema: stg_ga4
+      +schema: staging
+
+    intermediate:
+      +schema: intermediate
 
     dwh:
-      +schema: fct_ga4
+      +schema: core
 
 

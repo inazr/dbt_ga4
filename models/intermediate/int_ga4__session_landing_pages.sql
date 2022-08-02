@@ -32,5 +32,7 @@ FROM
         get_row_numbers_for_session_events
 WHERE   1=1
   AND   row_number_per_session_id = 1
+GROUP BY
+        1,2,3
 
 

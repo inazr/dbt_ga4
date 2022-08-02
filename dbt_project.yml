@@ -10,7 +10,7 @@ version: 0.1.0
 profile: 'dev'
 
 vars:
-  ga4__look_back_window_days: 5 # Needs to be modified if the model has not run for more than this number of days
+  ga4__look_back_window_days: 3 # Needs to be increased if the model has not run for more than this number of days
   ga4__start_date: '2020-11-01 00:00:00+00:00' # May be used in the future
   ga4__current_date: '2021-01-31 00:00:00+00:00' # Replace with CURRENT_DATE
   ga4__funnel_steps: ['view_search_result', 'select_item', 'add_to_cart', 'add_payment_info', 'purchase'] # Insert all your funnel step events in their respective order here. The last one should be a conversion event.

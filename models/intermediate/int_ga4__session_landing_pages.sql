@@ -1,13 +1,22 @@
-{{ config(
+{{
+    config(
+        materialized = 'incremental',
+        partition_by = {
+              "field": "event_date",
+              "data_type": "date",
+              "granularity": "day"
+        },
 
-        materialized='incremental'
-)}}
+        cluster_by = 'event_date'
+    )
 
+}}
 
 WITH get_row_numbers_for_session_events AS (
 
     SELECT
             stg_ga4__event_params.ga_session_id,
+            stg_ga4__event_params.event_date,
             stg_ga4__event_params.event_timestamp,
             stg_ga4__event_params.string_value,
             ROW_NUMBER() over (PARTITION BY stg_ga4__event_params.ga_session_id ORDER BY stg_ga4__event_params.event_timestamp ASC) as row_number_per_session_id,
@@ -18,7 +27,7 @@ WITH get_row_numbers_for_session_events AS (
 
     {% if is_incremental() %}
 
-      AND   stg_ga4__event_params.event_timestamp >= ( SELECT MAX( event_timestamp ) FROM {{ this }} )
+      AND   stg_ga4__event_params.event_date >= (SELECT MAX(event_date) FROM {{ this }})
 
     {% endif %}
 
@@ -26,7 +35,7 @@ WITH get_row_numbers_for_session_events AS (
 
 SELECT
         ga_session_id,
-        event_timestamp,
+        event_date,
         string_value AS landing_page,
 FROM
         get_row_numbers_for_session_events

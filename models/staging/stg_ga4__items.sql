@@ -1,5 +1,6 @@
 SELECT
         user_pseudo_id,
+        PARSE_DATE('%Y%m%d', event_date) AS event_date,
         TIMESTAMP_MICROS(event_timestamp) AS event_timestamp,
         event_name,
         items.item_id,

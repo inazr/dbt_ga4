@@ -1,3 +1,9 @@
+{{ config(
+
+        materialized='incremental'
+)}}
+
+
 WITH get_row_numbers_for_session_events AS (
 
     SELECT
@@ -15,8 +21,15 @@ WITH get_row_numbers_for_session_events AS (
 
 SELECT
         ga_session_id,
+        event_timestamp,
         string_value AS landing_page,
 FROM
         get_row_numbers_for_session_events
 WHERE   1=1
   AND   row_number_per_session_id = 1
+
+        {% if is_incremental() %}
+  AND
+        stg_ga4__flat_events.event_timestamp >= ( SELECT MAX( event_timestamp ) FROM {{ this }} )
+
+        {% endif %}

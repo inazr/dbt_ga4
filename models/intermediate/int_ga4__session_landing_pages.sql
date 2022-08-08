@@ -6,10 +6,8 @@
               "data_type": "date",
               "granularity": "day"
         },
-
         cluster_by = 'event_date'
     )
-
 }}
 
 WITH get_row_numbers_for_session_events AS (
@@ -39,8 +37,10 @@ SELECT
         string_value AS landing_page,
 FROM
         get_row_numbers_for_session_events
+
 WHERE   1=1
   AND   row_number_per_session_id = 1
+
 GROUP BY
         1,2,3
 

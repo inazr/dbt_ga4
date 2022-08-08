@@ -24,8 +24,9 @@ FROM
         {{ ref('stg_ga4__flat_events') }}
 
         {% if is_incremental() %}
-WHERE
-        stg_ga4__flat_events.event_date >= ( SELECT MAX( event_date ) FROM {{ this }} )
+
+WHERE   1=1
+  AND   stg_ga4__flat_events.event_date >= ( SELECT MAX( event_date ) FROM {{ this }} )
 
         {% endif %}
 

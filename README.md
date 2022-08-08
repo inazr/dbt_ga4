@@ -16,11 +16,11 @@ This models avoids a persistent staging layer. Only the last 5 (last X) days wil
 
 ## install from github
 
-create a packages.yml file in your root folder:
+create a packages.yml file in your dbt root folder:
 
 packages:
   - git: "https://github.com/inazr/dbt_ga4.git"
-    revision: v0.1.0-alpha
+  - revision: v0.1.0-alpha
 
 
 ## Good to know

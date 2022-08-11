@@ -2,30 +2,33 @@
     config(
         materialized = 'incremental',
         partition_by = {
-              "field": "event_date",
+              "field": "session_reporting_date",
               "data_type": "date",
               "granularity": "day"
         },
-        cluster_by = 'event_date'
+        cluster_by = 'session_reporting_date'
     )
 }}
 
 
 SELECT
         stg_ga4__flat_events.ga_session_id,
-        stg_ga4__flat_events.event_date,
+        int_ga4__session_start_date.{{ ga4__session_reporting_date }} AS session_reporting_date,
         {% for event_name in var('ga4__funnel_steps') %}
            CASE WHEN COUNT(CASE WHEN stg_ga4__flat_events.event_name = '{{event_name}}' THEN stg_ga4__flat_events.ga_session_id END) > 0 THEN TRUE ELSE FALSE END AS funnel_step_{{ loop.index }} {{ ", " if not loop.last else "" }}
         {% endfor %}
 
 FROM
---         stg_ga4.stg_ga4__flat_events
         {{ref('stg_ga4__flat_events')}}
+
+LEFT JOIN
+        {{ ref('int_ga4__session_start_date') }}
+        ON stg_ga4__flat_events.ga_session_id = int_ga4__session_start_date.ga_session_id
 
         {% if is_incremental() %}
 
 WHERE   1=1
-  AND   stg_ga4__flat_events.event_date >= (SELECT MAX(event_date) FROM {{ this }})
+  AND   stg_ga4__flat_events.event_date >= (SELECT MAX(session_reporting_date) FROM {{ this }})
 
         {% endif %}
 

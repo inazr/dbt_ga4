@@ -2,12 +2,12 @@
     config(
         materialized = 'incremental',
         partition_by = {
-              "field": "event_date",
+              "field": "session_reporting_date",
               "data_type": "date",
               "granularity": "day"
         },
 
-        cluster_by = 'event_date'
+        cluster_by = 'session_reporting_date'
     )
 
 }}
@@ -15,7 +15,7 @@
 
 SELECT
         stg_ga4__flat_events.ga_session_id,
-        stg_ga4__flat_events.event_date,
+        int_ga4__session_start_date.{{ ga4__session_reporting_date }} AS session_reporting_date,
         stg_ga4__flat_events.source,
         stg_ga4__flat_events.medium,
         stg_ga4__event_params.string_value AS campaign,
@@ -85,19 +85,22 @@ SELECT
 
         END AS default_channel_grouping
 FROM
---         stg_ga4.stg_ga4__flat_events
         {{ ref('stg_ga4__flat_events') }}
 
 LEFT JOIN
---         stg_ga4.stg_ga4__event_params
         {{ ref('stg_ga4__event_params') }}
         ON stg_ga4__flat_events.join_key = stg_ga4__event_params.join_key
         AND stg_ga4__event_params.key = 'campaign'
 
+LEFT JOIN
+        {{ ref('int_ga4__session_start_date') }}
+        ON stg_ga4__flat_events.ga_session_id = int_ga4__session_start_date.ga_session_id
+
+
         {% if is_incremental() %}
 
 WHERE   1=1
-  AND   stg_ga4__flat_events.event_date >= (SELECT MAX(event_date) FROM {{ this }})
+  AND   stg_ga4__flat_events.event_date >= (SELECT MAX(session_reporting_date) FROM {{ this }})
 
         {% endif %}
 

@@ -15,6 +15,7 @@
 WITH session_data_from_events_cte AS (
 
     SELECT
+            int_ga4__session_reporting_date.{{ var('ga4__session_reporting_date') }} AS session_reporting_date,
             stg_ga4__flat_events.ga_session_id,
             stg_ga4__flat_events.user_pseudo_id,
             stg_ga4__flat_events.event_date,
@@ -23,8 +24,13 @@ WITH session_data_from_events_cte AS (
             COUNT(stg_ga4__flat_events.ga_session_id) AS number_of_events,
     FROM
             {{ref('stg_ga4__flat_events')}}
+
+    LEFT JOIN
+            {{ref('int_ga4__session_reporting_date')}}
+            ON stg_ga4__flat_events.ga_session_id = int_ga4__session_reporting_date.ga_session_id
+
     GROUP BY
-            1,2,3
+            1,2,3,4
 
 
 )
@@ -33,6 +39,7 @@ WITH session_data_from_events_cte AS (
 SELECT
         session_data_from_events_cte.ga_session_id,
         session_data_from_events_cte.user_pseudo_id,
+        session_data_from_events_cte.session_reporting_date,
         session_data_from_events_cte.event_date,
         session_data_from_events_cte.session_first_event_timestamp,
         session_data_from_events_cte.session_last_event_timestamp,

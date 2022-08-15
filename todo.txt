@@ -4,4 +4,4 @@
 #   a) "Last Click Non Direct"
 #   b) Google game theory one where I forgot the name
 # 6. Create dbt metrics
-# 7. fix sessions that have events on two days
+# 7. fix sessions that have events on two days and add the user_pseudo_id to the identifier

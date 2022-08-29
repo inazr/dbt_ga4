@@ -2,7 +2,7 @@ WITH event_params_cte AS (
 
     SELECT
             user_pseudo_id,
-            case when event_params.key = 'ga_session_id' then event_params.value.int_value else null end as ga_session_id,
+            CASE WHEN event_params.key = 'ga_session_id' THEN event_params.value.int_value ELSE NULL END AS ga_session_id,
             PARSE_DATE('%Y%m%d', event_date) AS event_date,
             event_timestamp,
             event_name,
@@ -25,8 +25,9 @@ WITH event_params_cte AS (
 
 
 SELECT
-        MAX(ga_session_id) OVER (PARTITION BY event_timestamp, event_name) AS ga_session_id,
         user_pseudo_id,
+        MAX(ga_session_id) OVER (PARTITION BY event_timestamp, event_name) AS ga_session_id,
+        user_pseudo_id||'.'||MAX(ga_session_id) OVER (PARTITION BY event_timestamp, event_name) AS unique_session_id,
         event_date,
         TIMESTAMP_MICROS(event_timestamp) AS event_timestamp,
         event_name,

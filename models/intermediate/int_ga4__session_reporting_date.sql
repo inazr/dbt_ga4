@@ -12,14 +12,16 @@
               "data_type": "date",
               "granularity": "day"
         },
-        cluster_by = 'ga_session_id'
+        cluster_by = ['ga_session_id', 'user_pseudo_id']
     )
 }}
 
 SELECT
-        ga_session_id,
-        MIN(event_date) AS session_start_date,
-        MAX(event_date) AS session_end_date,
+        stg_ga4__flat_events.ga_session_id,
+        stg_ga4__flat_events.user_pseudo_id,
+        CAST(stg_ga4__flat_events.user_pseudo_id AS STRING)||'.'||CAST(stg_ga4__flat_events.ga_session_id AS STRING) AS ga_session_uuid,
+        MIN(stg_ga4__flat_events.event_date) AS session_start_date,
+        MAX(stg_ga4__flat_events.event_date) AS session_end_date,
         CURRENT_DATE AS _load_date,
 FROM
         {{ ref('stg_ga4__flat_events') }}
@@ -33,4 +35,4 @@ WHERE   1=1
 {% endif %}
 
 GROUP BY
-        1
+        1,2,3,6

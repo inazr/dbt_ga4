@@ -1,5 +1,7 @@
 SELECT
         user_pseudo_id,
+        (SELECT VALUE.int_value FROM unnest(event_params) WHERE KEY = 'ga_session_id') AS ga_session_id,
+        user_pseudo_id||'.'||(SELECT VALUE.int_value FROM unnest(event_params) WHERE KEY = 'ga_session_id') AS unique_session_id,
         PARSE_DATE('%Y%m%d', event_date) AS event_date,
         TIMESTAMP_MICROS(event_timestamp) AS event_timestamp,
         user_properties,

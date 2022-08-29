@@ -1,7 +1,8 @@
 SELECT
         PARSE_DATE('%Y%m%d', event_date) AS event_date,
         TIMESTAMP_MICROS(event_timestamp) AS event_timestamp,
-        (select value.int_value from unnest(event_params) where key = 'ga_session_id') as ga_session_id,
+        (SELECT VALUE.int_value FROM unnest(event_params) WHERE KEY = 'ga_session_id') AS ga_session_id,
+        user_pseudo_id||'.'||(SELECT VALUE.int_value FROM unnest(event_params) WHERE KEY = 'ga_session_id') AS unique_session_id,
         event_name,
         event_previous_timestamp,
         event_value_in_usd,

@@ -28,6 +28,7 @@ WITH session_data_from_events_cte AS (
     LEFT JOIN
             {{ref('int_ga4__session_reporting_date')}}
             ON stg_ga4__flat_events.ga_session_id = int_ga4__session_reporting_date.ga_session_id
+            AND stg_ga4__flat_events.user_pseudo_id = int_ga4__session_reporting_date.user_pseudo_id
 
     GROUP BY
             1,2,3,4
@@ -58,12 +59,15 @@ FROM
 
 LEFT JOIN
         {{ref('int_ga4__session_default_channel_grouping')}}
-        ON  session_data_from_events_cte.ga_session_id = int_ga4__session_default_channel_grouping.ga_session_id
+        ON session_data_from_events_cte.ga_session_id = int_ga4__session_default_channel_grouping.ga_session_id
+        AND session_data_from_events_cte.user_pseudo_id = int_ga4__session_default_channel_grouping.user_pseudo_id
 
 LEFT JOIN
         {{ref('int_ga4__session_funnel_steps')}}
-        ON  int_ga4__session_default_channel_grouping.ga_session_id = int_ga4__session_funnel_steps.ga_session_id
+        ON int_ga4__session_default_channel_grouping.ga_session_id = int_ga4__session_funnel_steps.ga_session_id
+        AND int_ga4__session_default_channel_grouping.user_pseudo_id = int_ga4__session_funnel_steps.user_pseudo_id
 
 LEFT JOIN
         {{ref('int_ga4__session_landing_pages')}}
-        ON  int_ga4__session_default_channel_grouping.ga_session_id = int_ga4__session_landing_pages.ga_session_id
+        ON int_ga4__session_default_channel_grouping.ga_session_id = int_ga4__session_landing_pages.ga_session_id
+        AND int_ga4__session_default_channel_grouping.user_pseudo_id = int_ga4__session_landing_pages.user_pseudo_id

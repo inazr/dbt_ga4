@@ -18,6 +18,7 @@ WITH session_data_from_events_cte AS (
             int_ga4__session_reporting_date.{{ var('ga4__session_reporting_date') }} AS session_reporting_date,
             stg_ga4__flat_events.ga_session_id,
             stg_ga4__flat_events.user_pseudo_id,
+            stg_ga4__flat_events.unique_session_id,
             stg_ga4__flat_events.event_date,
             MIN(stg_ga4__flat_events.event_timestamp) AS session_first_event_timestamp,
             MAX(stg_ga4__flat_events.event_timestamp) AS session_last_event_timestamp,
@@ -27,11 +28,10 @@ WITH session_data_from_events_cte AS (
 
     LEFT JOIN
             {{ref('int_ga4__session_reporting_date')}}
-            ON stg_ga4__flat_events.ga_session_id = int_ga4__session_reporting_date.ga_session_id
-            AND stg_ga4__flat_events.user_pseudo_id = int_ga4__session_reporting_date.user_pseudo_id
+            ON stg_ga4__flat_events.unique_session_id = int_ga4__session_reporting_date.unique_session_id
 
     GROUP BY
-            1,2,3,4
+            1,2,3,4,5
 
 
 )
@@ -40,6 +40,7 @@ WITH session_data_from_events_cte AS (
 SELECT
         session_data_from_events_cte.ga_session_id,
         session_data_from_events_cte.user_pseudo_id,
+        session_data_from_events_cte.unique_session_id,
         session_data_from_events_cte.session_reporting_date,
         session_data_from_events_cte.event_date,
         session_data_from_events_cte.session_first_event_timestamp,
@@ -59,15 +60,12 @@ FROM
 
 LEFT JOIN
         {{ref('int_ga4__session_default_channel_grouping')}}
-        ON session_data_from_events_cte.ga_session_id = int_ga4__session_default_channel_grouping.ga_session_id
-        AND session_data_from_events_cte.user_pseudo_id = int_ga4__session_default_channel_grouping.user_pseudo_id
+        ON session_data_from_events_cte.unique_session_id = int_ga4__session_default_channel_grouping.unique_session_id
 
 LEFT JOIN
         {{ref('int_ga4__session_funnel_steps')}}
-        ON int_ga4__session_default_channel_grouping.ga_session_id = int_ga4__session_funnel_steps.ga_session_id
-        AND int_ga4__session_default_channel_grouping.user_pseudo_id = int_ga4__session_funnel_steps.user_pseudo_id
+        ON int_ga4__session_default_channel_grouping.unique_session_id = int_ga4__session_funnel_steps.unique_session_id
 
 LEFT JOIN
         {{ref('int_ga4__session_landing_pages')}}
-        ON int_ga4__session_default_channel_grouping.ga_session_id = int_ga4__session_landing_pages.ga_session_id
-        AND int_ga4__session_default_channel_grouping.user_pseudo_id = int_ga4__session_landing_pages.user_pseudo_id
+        ON int_ga4__session_default_channel_grouping.unique_session_id = int_ga4__session_landing_pages.unique_session_id

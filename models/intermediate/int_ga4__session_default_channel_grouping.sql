@@ -16,7 +16,7 @@
 SELECT
         stg_ga4__flat_events.ga_session_id,
         stg_ga4__flat_events.user_pseudo_id,
-        CAST(stg_ga4__flat_events.user_pseudo_id AS STRING)||'.'||CAST(stg_ga4__flat_events.ga_session_id AS STRING) AS ga_session_uuid,
+        stg_ga4__flat_events.unique_session_id,
         int_ga4__session_reporting_date.{{ var('ga4__session_reporting_date') }} AS session_reporting_date,
         stg_ga4__flat_events.source,
         stg_ga4__flat_events.medium,
@@ -91,15 +91,13 @@ FROM
 
 LEFT JOIN
         {{ ref('stg_ga4__event_params') }}
-        ON stg_ga4__flat_events.ga_session_id = stg_ga4__event_params.ga_session_id
-        AND stg_ga4__flat_events.user_pseudo_id = stg_ga4__event_params.user_pseudo_id
+        ON stg_ga4__flat_events.unique_session_id = stg_ga4__event_params.unique_session_id
         AND stg_ga4__event_params.key = 'campaign'
         AND stg_ga4__event_params.event_name = 'page_view'
 
 LEFT JOIN
         {{ ref('int_ga4__session_reporting_date') }}
-        ON stg_ga4__flat_events.ga_session_id = int_ga4__session_reporting_date.ga_session_id
-        AND stg_ga4__flat_events.user_pseudo_id = int_ga4__session_reporting_date.user_pseudo_id
+        ON stg_ga4__flat_events.unique_session_id = int_ga4__session_reporting_date.unique_session_id
 
         {% if is_incremental() %}
 

@@ -19,7 +19,7 @@
 SELECT
         stg_ga4__flat_events.ga_session_id,
         stg_ga4__flat_events.user_pseudo_id,
-        CAST(stg_ga4__flat_events.user_pseudo_id AS STRING)||'.'||CAST(stg_ga4__flat_events.ga_session_id AS STRING) AS ga_session_uuid,
+        stg_ga4__flat_events.unique_session_id,
         MIN(stg_ga4__flat_events.event_date) AS session_start_date,
         MAX(stg_ga4__flat_events.event_date) AS session_end_date,
         CURRENT_DATE AS _load_date,
@@ -30,7 +30,7 @@ WHERE   1=1
 
 {% if is_incremental() %}
 
-  AND   stg_ga4__flat_events.ga_session_id NOT IN (SELECT ga_session_id FROM {{ this }})
+  AND   stg_ga4__flat_events.unique_session_id NOT IN (SELECT unique_session_id FROM {{ this }})
 
 {% endif %}
 

@@ -15,17 +15,17 @@ WITH get_row_numbers_for_session_events AS (
     SELECT
             stg_ga4__event_params.ga_session_id,
             stg_ga4__event_params.user_pseudo_id,
-            CAST(stg_ga4__event_params.user_pseudo_id AS STRING)||'.'||CAST(stg_ga4__event_params.ga_session_id AS STRING) AS ga_session_uuid,
+            stg_ga4__event_params.unique_session_id,
             int_ga4__session_reporting_date.{{ var('ga4__session_reporting_date') }} AS session_reporting_date,
             stg_ga4__event_params.event_timestamp,
             stg_ga4__event_params.string_value,
-            ROW_NUMBER() over (PARTITION BY stg_ga4__event_params.ga_session_id, stg_ga4__event_params.user_pseudo_id ORDER BY stg_ga4__event_params.event_timestamp ASC) as row_number_per_session_id,
+            ROW_NUMBER() over (PARTITION BY stg_ga4__event_params.unique_session_id ORDER BY stg_ga4__event_params.event_timestamp ASC) AS row_number_per_session_id,
     FROM
             {{ ref('stg_ga4__event_params') }}
 
     LEFT JOIN
             {{ ref('int_ga4__session_reporting_date') }}
-            ON stg_ga4__event_params.ga_session_id = int_ga4__session_reporting_date.ga_session_id
+            ON stg_ga4__event_params.unique_session_id = int_ga4__session_reporting_date.unique_session_id
 
     WHERE   1=1
       AND   stg_ga4__event_params.key = 'page_location'
@@ -41,7 +41,7 @@ WITH get_row_numbers_for_session_events AS (
 SELECT
         ga_session_id,
         user_pseudo_id,
-        ga_session_uuid,
+        unique_session_id,
         session_reporting_date,
         string_value AS landing_page,
 FROM

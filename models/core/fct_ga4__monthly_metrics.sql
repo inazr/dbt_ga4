@@ -20,7 +20,7 @@ SELECT
         stg_ga4__flat_events.browser,
         stg_ga4__flat_events.medium,
         stg_ga4__flat_events.source,
-        COUNT( DISTINCT stg_ga4__flat_events.ga_session_id )    AS sessions,
+        COUNT( DISTINCT stg_ga4__flat_events.unique_session_id )    AS sessions,
         COUNT( DISTINCT stg_ga4__flat_events.user_pseudo_id )   AS users
 FROM
         {{ ref('stg_ga4__flat_events') }}

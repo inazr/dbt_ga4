@@ -3,7 +3,6 @@
  there is a risk for creating doublicate sessions if a session has events before and after the dateline.
  */
 
-
 {{
     config(
         materialized = 'incremental',

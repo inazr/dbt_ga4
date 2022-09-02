@@ -21,7 +21,7 @@ SELECT
         {% endfor %}
 
 FROM
-        {{ref('stg_ga4__flat_events')}}
+        {{ ref('stg_ga4__flat_events') }}
 
 LEFT JOIN
         {{ ref('int_ga4__session_reporting_date') }}

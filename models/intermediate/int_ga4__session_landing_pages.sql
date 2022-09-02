@@ -13,9 +13,9 @@
 WITH get_row_numbers_for_session_events AS (
 
     SELECT
-            stg_ga4__event_params.ga_session_id,
-            stg_ga4__event_params.user_pseudo_id,
-            stg_ga4__event_params.unique_session_id,
+            int_ga4__session_reporting_date.ga_session_id,
+            int_ga4__session_reporting_date.user_pseudo_id,
+            int_ga4__session_reporting_date.unique_session_id,
             int_ga4__session_reporting_date.{{ var('ga4__session_reporting_date') }} AS session_reporting_date,
             stg_ga4__event_params.event_timestamp,
             stg_ga4__event_params.string_value,

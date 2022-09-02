@@ -4,28 +4,28 @@ version: 2
 models:
   - name: int_ga4__session_funnel_steps
     columns:
-      - name: ga_session_uuid
+      - name: unique_session_id
         tests:
           - unique
           - not_null
 
   - name: int_ga4__session_landing_pages
     columns:
-      - name: ga_session_uuid
+      - name: unique_session_id
         tests:
           - unique
           - not_null
 
   - name: int_ga4__session_default_channel_grouping
     columns:
-      - name: ga_session_uuid
+      - name: unique_session_id
         tests:
           - unique
           - not_null
 
   - name: int_ga4__session_reporting_date
     columns:
-      - name: ga_session_uuid
+      - name: unique_session_id
         tests:
           - unique
           - not_null

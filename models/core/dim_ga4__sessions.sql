@@ -3,11 +3,11 @@
 
         materialized='incremental',
         partition_by={
-              "field": "event_date",
+              "field": "session_reporting_date",
               "data_type": "date",
               "granularity": "day"
         },
-        cluster_by = "event_date",
+        cluster_by = "session_reporting_date",
     )
 }}
 
@@ -27,7 +27,7 @@ WITH session_data_from_events_cte AS (
 
     LEFT JOIN
             {{ ref('int_ga4__session_reporting_date') }}
-            ON stg_ga4__flat_events.unique_session_id = int_ga4__session_reporting_date.unique_session_id
+       ON   stg_ga4__flat_events.unique_session_id = int_ga4__session_reporting_date.unique_session_id
 
     GROUP BY
             1,2,3,4
@@ -58,12 +58,12 @@ FROM
 
 LEFT JOIN
         {{ref('int_ga4__session_default_channel_grouping')}}
-        ON session_data_from_events_cte.unique_session_id = int_ga4__session_default_channel_grouping.unique_session_id
+   ON   session_data_from_events_cte.unique_session_id = int_ga4__session_default_channel_grouping.unique_session_id
 
 LEFT JOIN
         {{ref('int_ga4__session_funnel_steps')}}
-        ON int_ga4__session_default_channel_grouping.unique_session_id = int_ga4__session_funnel_steps.unique_session_id
+   ON   int_ga4__session_default_channel_grouping.unique_session_id = int_ga4__session_funnel_steps.unique_session_id
 
 LEFT JOIN
         {{ref('int_ga4__session_landing_pages')}}
-        ON int_ga4__session_default_channel_grouping.unique_session_id = int_ga4__session_landing_pages.unique_session_id
+   ON   int_ga4__session_default_channel_grouping.unique_session_id = int_ga4__session_landing_pages.unique_session_id

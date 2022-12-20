@@ -58,5 +58,9 @@ SELECT
 FROM
         {{ source('ga4', 'events') }}
 
+{% if not flags.FULL_REFRESH %}
+
 WHERE   1=1
   AND   _table_suffix >= CAST(TIMESTAMP '{{ var('ga4__current_date') }}' - INTERVAL {{ var('ga4__look_back_window_days') }} DAY AS STRING FORMAT 'YYYYMMDD')
+
+{% endif %}

@@ -25,12 +25,12 @@ SELECT
 FROM
         {{ ref('stg_ga4__flat_events') }}
 
-        {% if is_incremental() %}
+{% if is_incremental() %}
 
 WHERE   1=1
   AND   stg_ga4__flat_events.event_date >= (SELECT MAX(event_month) FROM {{ this }})
 
-        {% endif %}
+{% endif %}
 
 GROUP BY
         1,2,3,4,5,6,7

@@ -25,7 +25,7 @@ FROM
 
 LEFT JOIN
         {{ ref('int_ga4__session_reporting_date') }}
-        ON stg_ga4__flat_events.unique_session_id = int_ga4__session_reporting_date.unique_session_id
+   ON   stg_ga4__flat_events.unique_session_id = int_ga4__session_reporting_date.unique_session_id
 
         {% if is_incremental() %}
 

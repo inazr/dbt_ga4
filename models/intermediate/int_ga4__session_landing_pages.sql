@@ -25,7 +25,7 @@ WITH get_row_numbers_for_session_events AS (
 
     LEFT JOIN
             {{ ref('int_ga4__session_reporting_date') }}
-            ON stg_ga4__event_params.unique_session_id = int_ga4__session_reporting_date.unique_session_id
+       ON   stg_ga4__event_params.unique_session_id = int_ga4__session_reporting_date.unique_session_id
 
     WHERE   1=1
       AND   stg_ga4__event_params.key = 'page_location'

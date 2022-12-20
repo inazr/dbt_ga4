@@ -93,21 +93,21 @@ WITH default_channel_grouping_cte AS (
 
     LEFT JOIN
             {{ ref('stg_ga4__event_params') }}
-            ON stg_ga4__flat_events.unique_session_id = stg_ga4__event_params.unique_session_id
-            AND stg_ga4__event_params.key = 'campaign'
-            AND stg_ga4__event_params.event_name = 'page_view'
+       ON   stg_ga4__flat_events.unique_session_id = stg_ga4__event_params.unique_session_id
+      AND   stg_ga4__event_params.key = 'campaign'
+      AND   stg_ga4__event_params.event_name = 'page_view'
 
     LEFT JOIN
             {{ ref('int_ga4__session_reporting_date') }}
-            ON stg_ga4__flat_events.unique_session_id = int_ga4__session_reporting_date.unique_session_id
+       ON   stg_ga4__flat_events.unique_session_id = int_ga4__session_reporting_date.unique_session_id
 
     WHERE   1=1
 
-            {% if is_incremental() %}
+    {% if is_incremental() %}
 
       AND   stg_ga4__flat_events.event_date >= (SELECT MAX(session_reporting_date) FROM {{ this }})
 
-            {% endif %}
+    {% endif %}
 
     GROUP BY
             1,2,3,4,5,6,7,8
